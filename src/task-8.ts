@@ -1,3 +1,5 @@
+import axios from "axios";
+
 // Интерфейс для описания объекта поста
 interface Post {
   id: number;
@@ -5,23 +7,19 @@ interface Post {
   body: string;
 }
 
-// Типизированная функция для получения постов (с использованием fetch)
+// Типизированная функция для получения постов
 async function fetchPosts(): Promise<Post[]> {
-  const response = await fetch('https://jsonplaceholder.typicode.com/posts');
-  
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-  
-  const data: Post[] = await response.json();
-  return data;
+  const response = await axios.get<Post[]>(
+    'https://jsonplaceholder.typicode.com/posts'
+  );
+  return response.data;
 }
 
 // Использование типизированной функции
 fetchPosts().then((posts) => {
-  console.log(posts[0].title); // TypeScript знает, что posts это Post[]
-  console.log(posts[0].id);    // TypeScript знает о свойстве id
-  console.log(posts[0].body);  // TypeScript знает о свойстве body
+  console.log(posts[0].title); 
+  console.log(posts[0].id);    
+  console.log(posts[0].body);  
 });
 
 // Дополнительные примеры с обработкой ошибок и async/await
@@ -45,14 +43,10 @@ async function fetchAndDisplayPosts(): Promise<void> {
 
 // Функция для получения конкретного поста
 async function fetchPost(id: number): Promise<Post> {
-  const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`);
-  
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-  
-  const data: Post = await response.json();
-  return data;
+  const response = await axios.get<Post>(
+    `https://jsonplaceholder.typicode.com/posts/${id}`
+  );
+  return response.data;
 }
 
 // Использование функции для получения конкретного поста
